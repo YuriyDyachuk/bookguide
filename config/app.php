@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Name
+    | Application Search
     |--------------------------------------------------------------------------
     |
     | This value is the name of your application. This value is used when the
@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Onecentlin\Adminer\ServiceProvider::class,
 
         /*
          * Application Service Providers...
