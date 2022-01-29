@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\AuthorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::prefix('authors')->group(function (){
+
+    Route::get('', [AuthorController::class, 'index']);
+    Route::post('', [\App\Http\Controllers\Dashboard\Ajax\AuthorController::class, 'store']);
+    Route::prefix('{authorId}')->group(function (){
+        Route::patch('', [\App\Http\Controllers\Dashboard\Ajax\AuthorController::class, 'update']);
+        Route::delete('', [AuthorController::class, 'index']);
+    });
+
 });
