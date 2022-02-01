@@ -28,7 +28,7 @@ class AuthorStoreRequest extends FormRequest
         return [
             'surname'       => ['required','string','min:3','max:30'],
             'name'          => ['required','string','min:2','max:20'],
-            'patronymic'    => ['string','max:20']
+            'patronymic'    => ['nullable','string','max:20']
         ];
     }
 }

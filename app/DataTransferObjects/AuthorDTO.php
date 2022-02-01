@@ -8,7 +8,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class AuthorDTO extends DataTransferObject
 {
-    public string  $surName;
-    public string  $name;
-    public ?string $patronymic;
+    public string   $surname;
+    public string   $name;
+    public ?string  $patronymic;
 }
