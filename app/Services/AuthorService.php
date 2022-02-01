@@ -27,12 +27,12 @@ class AuthorService
         return $this->authorRepository->getAll();
     }
 
-    public function store(AuthorDTO $DTO)
+    public function store(AuthorDTO $DTO): Author
     {
-        $this->authorRepository->create($DTO);
+        return $this->authorRepository->create($DTO);
     }
 
-    public function update(AuthorDTO $DTO, int $authorId)
+    public function update(AuthorDTO $DTO, int $authorId): void
     {
         $this->authorRepository->update($DTO, $authorId);
     }
@@ -52,5 +52,10 @@ class AuthorService
     public function existsAuthorId(int $authorId): bool
     {
         return $this->authorRepository->existsById($authorId);
+    }
+
+    public function existsAuthorIds(array $ids): bool
+    {
+        return $this->authorRepository->existsIds($ids);
     }
 }

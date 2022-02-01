@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Models\Author;
+use App\Models\Book;
 use App\Enums\PaginateEnum;
 use App\Filters\Author\Search;
 use Illuminate\Pipeline\Pipeline;
-use App\DataTransferObjects\AuthorDTO;
+use App\DataTransferObjects\BookDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class AuthorRepository extends AbstractRepository
+class BookRepository extends AbstractRepository
 {
     public function model(): string
     {
-        return Author::class;
+        return Book::class;
     }
 
     private function search()
@@ -32,37 +32,32 @@ class AuthorRepository extends AbstractRepository
         return $this->search()->paginate(PaginateEnum::countPage()->value);
     }
 
-    public function create(AuthorDTO $DTO): Author
+    public function create(BookDTO $DTO): Book
     {
         return $this->query()->create($DTO->toArray())->refresh();
     }
 
-    public function update(AuthorDTO $DTO, int $authorId): void
+    public function update(BookDTO $DTO, int $bookId): void
     {
         $this->query()
-             ->where('id', $authorId)
+             ->where(['id' => $bookId])
              ->update($DTO->toArray());
     }
 
-    public function destroy(int $authorId): void
+    public function destroy(int $bookId): void
     {
-        $this->query()->where('id', $authorId)->delete();
+        $this->query()->where(['id' => $bookId])->delete();
     }
 
     #================================== [CUSTOM METHODS] ==================================#
 
-    public function findById(int $authorId): ?Author
+    public function findById(int $bookId): ?Book
     {
-        return $this->query()->where('id', $authorId)->first();
+        return $this->query()->where(['id' => $bookId])->first();
     }
 
-    public function existsById(int $authorId): bool
+    public function existsById(int $bookId): bool
     {
-        return $this->query()->where('id', $authorId)->exists();
-    }
-
-    public function existsIds(array $ids): bool
-    {
-        return $this->query()->whereIn('id', $ids)->exists();
+        return $this->query()->where(['id' => $bookId])->exists();
     }
 }
