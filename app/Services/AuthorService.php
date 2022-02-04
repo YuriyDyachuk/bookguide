@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Author;
+use App\Models\Book;
+use Illuminate\Support\Collection;
 use App\Repositories\AuthorRepository;
 use App\DataTransferObjects\AuthorDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -44,6 +46,16 @@ class AuthorService
 
     #================================== [CUSTOM METHODS] ==================================#
 
+    public function all(): Collection
+    {
+        return $this->authorRepository->all();
+    }
+
+    public function searchBook(): Collection
+    {
+        return $this->authorRepository->searchBook();
+    }
+
     public function findById(int $authorId): ?Author
     {
         return $this->authorRepository->findById($authorId);
@@ -57,5 +69,14 @@ class AuthorService
     public function existsAuthorIds(array $ids): bool
     {
         return $this->authorRepository->existsIds($ids);
+    }
+
+    public function filterAuthorWithSelect(Book $book, Collection $author): Collection
+    {
+        $authorsBook = $book->authors()->pluck('author_id')->toArray();
+
+        return $author->filter(function ($author) use($authorsBook) {
+                    return !in_array($author->id, $authorsBook);
+               })->pluck('name','id');
     }
 }

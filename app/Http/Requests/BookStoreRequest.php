@@ -30,7 +30,7 @@ class BookStoreRequest extends FormRequest
             'name'          => ['required','string'],
             'description'   => ['required','string'],
             'published'     => ['required','date_format:Y-m-d'],
-            'authorIds'     => ['required','string',new ExistsUser($this->input('authorIds'))],
+            'authors'       => ['required','array','exists:authors,id'],
             'media'         => ['required','max:2048']
         ];
     }

@@ -17,12 +17,12 @@ class CheckBookAuthorMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $book = $request->route('books');
-        $author = $request->route('author');
-
-        if (!($book->id == $book->id)) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+//        $book = $request->route('books');
+//        $author = $request->route('author');
+//
+//        if (!($book->id == $book->id)) {
+//            abort(Response::HTTP_FORBIDDEN);
+//        }
 
         return $next($request);
     }

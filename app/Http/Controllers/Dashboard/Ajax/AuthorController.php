@@ -25,6 +25,15 @@ class AuthorController extends Controller
         $this->authorService = $authorService;
     }
 
+    public function index(Request $request)
+    {
+        if($request->ajax()) {
+            $books = $this->authorService->searchBook();
+
+            return response(['message' => 'Success', 'data' => $books]);
+        }
+    }
+
     public function store(AuthorStoreRequest $request): Response
     {
         if ($request->ajax()) {
@@ -44,6 +53,6 @@ class AuthorController extends Controller
             $this->authorService->destroy($authorId);
         }
 
-        return response(['message' => 'Successfully deleting author.'])->setStatusCode(Response::HTTP_NO_CONTENT);
+        return response(['error' => 'Something went wrong!', 'code' => Response::HTTP_NO_CONTENT]);
     }
 }

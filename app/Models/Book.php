@@ -38,4 +38,10 @@ class Book extends Model implements HasMedia
                     ->nonQueued();
             });
     }
+
+    public function authors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'author_book', 'book_id', 'author_id')
+                    ->withPivot('book_id', 'author_id');
+    }
 }

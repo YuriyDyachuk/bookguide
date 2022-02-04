@@ -10,6 +10,13 @@
                 <li class="list-group-item">Отчетсво: {{$author->patronymic}}</li>
             @endif
         </ul>
+
+        <!-- /.box-body -->
+        <div class="box-footer" style="text-align: center;margin-top: 50px;">
+            <a href="{{ route('authors.index') }}" class="btn button-cancel"><span>Cancel<i
+                        class="fas fa-times"></i></span></a>
+        </div>
+        <!-- /.box-footer-->
     </div>
 @endsection
 

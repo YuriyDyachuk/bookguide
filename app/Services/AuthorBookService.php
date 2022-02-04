@@ -30,4 +30,9 @@ class AuthorBookService
     {
         $this->authorBookRepository->detach($modelId, $authorId);
     }
+
+    public function destroy(int $bookId): void
+    {
+        $this->authorBookRepository->destroy($bookId);
+    }
 }

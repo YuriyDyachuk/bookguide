@@ -11,7 +11,6 @@ use App\Services\MediaService;
 use App\Factories\BookFactory;
 use App\Services\AuthorBookService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\BookStoreRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -42,18 +41,18 @@ class BookController extends Controller
                 $DTO = $this->bookFactory->create($request);
                 $book = $this->bookService->store($DTO);
                 /* Attach authors for book */
-                $this->authorBookService->attach($book->id, explodeString($request->input('authorIds')));
+                $this->authorBookService->attach($book->id, $request->input('authors'));
                 /* Add media file for book */
                 $this->mediaService->storeMedia($book, $request->file('media'));
             }catch (\Throwable $exception) {
-                return response(['error' => $exception->getMessage(), 'code' => Response::HTTP_BAD_REQUEST]);
+                return response(['error' => 'Something went wrong!'])->setStatusCode(Response::HTTP_BAD_REQUEST);
             }
         }
 
         return response(['message' => 'Successfully creating book.', 'data' => $book])->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function destroy(Request $request, int $bookId): RedirectResponse
+    public function destroy(Request $request, int $bookId): Response
     {
         if ($request->ajax()) {
             if (!$this->bookService->existsBookId($bookId)) {
@@ -63,11 +62,12 @@ class BookController extends Controller
             try {
                 $book = $this->bookService->findById($bookId);
                 $this->mediaService->deleteMedia($book);
-                $this->bookService->destroy($bookId);
+                $this->authorBookService->destroy($book->id);
+                $this->bookService->destroy($book->id);
 
-                return redirect()->back()->withInput(['message' => 'Successfully deleting book.']);
+                return response(['message' => 'Successfully deleting book.']);
             }catch (\Throwable $exception) {
-                return redirect()->back()->withErrors(['error' => 'Something went wrong!']);
+                return response(['error' => 'Something went wrong!'])->setStatusCode(Response::HTTP_BAD_REQUEST);
             }
         }
     }

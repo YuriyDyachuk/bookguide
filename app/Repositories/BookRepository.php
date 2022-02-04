@@ -6,8 +6,6 @@ namespace App\Repositories;
 
 use App\Models\Book;
 use App\Enums\PaginateEnum;
-use App\Filters\Author\Search;
-use Illuminate\Pipeline\Pipeline;
 use App\DataTransferObjects\BookDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -18,18 +16,9 @@ class BookRepository extends AbstractRepository
         return Book::class;
     }
 
-    private function search()
-    {
-        return app(Pipeline::class)
-            ->send(self::query())
-            ->through([
-                Search::class
-            ])->thenReturn();
-    }
-
     public function getAll(): LengthAwarePaginator
     {
-        return $this->search()->paginate(PaginateEnum::countPage()->value);
+        return $this->query()->paginate(PaginateEnum::countPage()->value);
     }
 
     public function create(BookDTO $DTO): Book

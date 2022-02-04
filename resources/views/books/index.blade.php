@@ -35,7 +35,7 @@
                     <td>{{ $book->published->format('Y-m-d') }}</td>
                     <td>
                         <a href=" {{ route('book.show', ['bookId' => $book->id]) }} "><i class="fas fa-eye"></i></a>
-                        <a href=" {{ route('book.show', ['bookId' => $book->id]) }} "><i class="fas fa-edit"></i></a>
+                        <a href=" {{ route('book.edit', ['bookId' => $book->id]) }} "><i class="fas fa-edit"></i></a>
                         <a href="" class="delete" data-href="{{ route('book.destroy', $book->id) }}"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
@@ -49,7 +49,8 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 text-center" style="margin: auto">
+            {{ $books->links() }}
         </div>
     </div>
 </div>
@@ -87,6 +88,17 @@
 
                 <div class="modal-body">
                     <div class="form-group">
+                        <label>Select author</label>
+                        <select id="multiple_author" name="authors[]" multiple>
+                            @foreach($authors as $key => $author)
+                                <option value="{{$key}}">{{$author}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
                         <input type="file" name="media" placeholder="Choose File" id="media">
                     </div>
                 </div>
@@ -104,6 +116,11 @@
 
 @push('scripts')
     <script>
+
+        let multipleAuthor = new Choices('#multiple_author', {
+            removeItemButton: true
+        });
+
         $(function() {
 
             /* Save book */
@@ -130,23 +147,25 @@
                             $('.alert').removeClass('show').addClass('hidden');
 
                             let book = data.data;
-                            let str = '<tr>' +
-                                '<td>'+book['id']+'</td>'+
-                                '<td>'+book['name']+'</a>'+'</td>'+
-                                '<td>'+book['description']+'</a>'+'</td>'+
-                                '<td>'+book['published']+'</a>'+'</td>'+
-                                '<td><a href="/book/'+book['id']+'" class="show" data-show="'+book['id']+'"><i class="fas fa-eye"></i></a>'+
-                                '<a href="/book/'+book['id']+'" class="edit" data-edit="'+book['id']+'"><i class="fas fa-edit"></i></a>'+
-                                '<a href="/book/'+book['id']+'" class="delete" data-delete="'+book['id']+'"><i class="fas fa-trash"></i></a></td></tr>';
-                            $('.table > tbody:last').append(str);
+                            $('.table > tbody:last').append(generateTable(book));
                         }
                     },
                     error: function(response){
                         console.log(response);
-                        // $('#image-input-error').text(response.responseJSON.errors.file);
                     }
                 });
             });
+
+            function generateTable(book) {
+                return '<tr>' +
+                    '<td>'+book['id']+'</td>'+
+                    '<td>'+book['name']+'</a>'+'</td>'+
+                    '<td>'+book['description']+'</a>'+'</td>'+
+                    '<td>'+book['published']+'</a>'+'</td>'+
+                    '<td><a href="/book/'+book['id']+'" class="show" data-show="'+book['id']+'"><i class="fas fa-eye"></i></a>'+
+                    '<a href="/book/'+book['id']+'" class="edit" data-edit="'+book['id']+'"><i class="fas fa-edit"></i></a>'+
+                    '<a href="/book/'+book['id']+'" class="delete" data-delete="'+book['id']+'"><i class="fas fa-trash"></i></a></td></tr>';
+            }
 
             /* Delete book */
             $('body').on('click','.delete', function(e){

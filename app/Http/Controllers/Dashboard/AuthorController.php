@@ -39,24 +39,24 @@ class AuthorController extends Controller
         return view('authors.show', ['author' => $this->authorService->findById($authorId)]);
     }
 
+    public function edit(int $authorId)
+    {
+        if (!$this->authorService->existsAuthorId($authorId)) {
+            throw new NotFoundHttpException();
+        }
+
+        return view('authors.edit', ['author' => $this->authorService->findById($authorId)]);
+    }
+
     public function update(AuthorUpdateRequest $request, int $authorId): RedirectResponse
     {
         if (!$this->authorService->existsAuthorId($authorId)) {
             throw new NotFoundHttpException();
         }
 
-        DB::beginTransaction();
-        try {
-            $DTO = $this->authorFactory->create($request);
-            $this->authorService->update($DTO, $authorId);
-            DB::commit();
+        $DTO = $this->authorFactory->create($request);
+        $this->authorService->update($DTO, $authorId);
 
-        }catch (\Throwable $exception) {
-            DB::rollBack();
-
-            return redirect()->back()->withErrors(['error' => 'Something went wrong!']);
-        }
-
-        return redirect()->back()->withInput(['message' => 'Successfully updating author.']);
+        return redirect()->back()->with(['message' => 'Successfully updating author.'])->withInput();
     }
 }

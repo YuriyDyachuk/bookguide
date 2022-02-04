@@ -35,7 +35,7 @@
                     <td>{{ $author->patronymic }}</td>
                     <td>
                         <a href=" {{ route('author.show', ['authorId' => $author->id]) }} "><i class="fas fa-eye"></i></a>
-                        <a href=" {{ route('author.show', ['authorId' => $author->id]) }} "><i class="fas fa-edit"></i></a>
+                        <a href=" {{ route('author.edit', ['authorId' => $author->id]) }} "><i class="fas fa-edit"></i></a>
                         <a href="" class="delete" data-href=" {{ route('author.destroy', $author->id) }} "><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
@@ -46,6 +46,12 @@
 
     <div class="row">
         <div class="alert alert-warning @if(!$authors->count()) hidden @else show @endif" role="alert"> Записей нет</div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center" style="margin: auto">
+            {{ $authors->links() }}
+        </div>
     </div>
 </div>
 
@@ -147,9 +153,9 @@
                             '<td><a href="/author/'+author['id']+'">'+author['surname']+'</a>'+'</td>'+
                             '<td><a href="/author/'+author['id']+'">'+author['name']+'</a>'+'</td>'+
                             '<td><a href="/author/'+author['id']+'">'+author['patronymic']+'</a>'+'</td>'+
-                            '<td><a href="/author/'+author['id']+'" class="show" data-show="'+author['id']+'">Просмотр</a>'+
-                            '<a href="/author/'+author['id']+'" class="edit" data-edit="'+author['id']+'">Редактировать</a>'+
-                            '<a href="/author/'+author['id']+'" class="delete" data-delete="'+author['id']+'">Удалить</a></td></tr>';
+                            '<td><a href="/author/'+author['id']+'" class="show" data-show="'+author['id']+'"><i class="fas fa-eye"></i></a>'+
+                            '<a href="/author/'+author['id']+'" class="edit" data-edit="'+author['id']+'"><i class="fas fa-edit"></i></a>'+
+                            '<a href="/author/'+author['id']+'" class="delete" data-delete="'+author['id']+'"><i class="fas fa-trash"></i></a></td></tr>';
                         $('.table > tbody:last').append(str);
                     },
                     error: function (msg) {
@@ -157,6 +163,37 @@
                     }
                 });
 
+            });
+
+            $('#search').on('keyup', function(e) {
+                let search = this.value;
+
+                $.ajax({
+                    type:'GET',
+                    url: '{{ url('authors/search') }}',
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {search},
+                    success: (data) => {
+                        if (data) {
+                            let author = data.data;
+                            Object.keys(author).forEach(function(key){
+                                $('.table > tbody').html('<tr>' +
+                                    '<td>'+author[key]['id']+'</td>'+
+                                    '<td>'+author[key]['surname']+'</a>'+'</td>'+
+                                    '<td>'+author[key]['name']+'</a>'+'</td>'+
+                                    '<td>'+author[key]['patronymic']+'</a>'+'</td>'+
+                                    '<td><a href="/author/'+author[key]['id']+'" class="show" data-show="'+author[key]['id']+'"><i class="fas fa-eye"></i></a>'+
+                                    '<a href="/author/'+author[key]['id']+'" class="edit" data-edit="'+author[key]['id']+'"><i class="fas fa-edit"></i></a>'+
+                                    '<a href="/author/'+author[key]['id']+'" class="delete" data-delete="'+author[key]['id']+'"><i class="fas fa-trash"></i></a></td></tr>');
+                            });
+                        }
+                    },
+                    error: function(response){
+                        console.log(response);
+                    }
+                });
             });
 
             /* Delete author */

@@ -8,6 +8,7 @@ use App\Models\Author;
 use App\Enums\PaginateEnum;
 use App\Filters\Author\Search;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use App\DataTransferObjects\AuthorDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -29,7 +30,7 @@ class AuthorRepository extends AbstractRepository
 
     public function getAll(): LengthAwarePaginator
     {
-        return $this->search()->paginate(PaginateEnum::countPage()->value);
+        return $this->query()->paginate(PaginateEnum::countPage()->value);
     }
 
     public function create(AuthorDTO $DTO): Author
@@ -50,6 +51,16 @@ class AuthorRepository extends AbstractRepository
     }
 
     #================================== [CUSTOM METHODS] ==================================#
+
+    public function all(): Collection
+    {
+        return $this->query()->get();
+    }
+
+    public function searchBook(): Collection
+    {
+        return $this->search()->get();
+    }
 
     public function findById(int $authorId): ?Author
     {

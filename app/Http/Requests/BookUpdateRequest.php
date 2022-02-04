@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Rules\ExistsUser;
+use App\Services\AuthorService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BookUpdateRequest extends FormRequest
@@ -30,8 +31,8 @@ class BookUpdateRequest extends FormRequest
             'name'          => ['string'],
             'description'   => ['string'],
             'published'     => ['date'],
-            'authorIds'     => ['string',new ExistsUser($this->input('authorIds'))],
-            'media'         => ['file','mimetypes:image/*','max:2048']
+            'authors'       => ['array','exists:authors,id'],
+            'media'         => ['max:2048']
         ];
     }
 

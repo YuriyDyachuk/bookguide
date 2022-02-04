@@ -23,9 +23,11 @@ Route::get('/', function () {
 Route::prefix('authors')->group(function (){
     Route::get('', [AuthorController::class, 'index'])->name('authors.index');
     Route::post('', [\App\Http\Controllers\Dashboard\Ajax\AuthorController::class, 'store'])->name('author.create');
+    Route::get('search', [\App\Http\Controllers\Dashboard\Ajax\AuthorController::class, 'index'])->name('author.search');
     Route::prefix('{authorId}')->group(function (){
         Route::get('', [AuthorController::class, 'show'])->name('author.show');
-        Route::patch('', [AuthorController::class, 'update'])->name('author.edit');
+        Route::get('edit', [AuthorController::class, 'edit'])->name('author.edit');
+        Route::patch('', [AuthorController::class, 'update'])->name('author.update');
         Route::delete('', [\App\Http\Controllers\Dashboard\Ajax\AuthorController::class, 'destroy'])->name('author.destroy');
     });
 });
@@ -35,11 +37,12 @@ Route::prefix('books')->group(function (){
     Route::post('', [\App\Http\Controllers\Dashboard\Ajax\BookController::class, 'store'])->name('book.create');
     Route::prefix('{bookId}')->group(function (){
         Route::get('', [BookController::class, 'show'])->name('book.show');
-        Route::patch('', [BookController::class, 'update'])->name('book.edit');
+        Route::get('edit', [BookController::class, 'edit'])->name('book.edit');
+        Route::patch('', [BookController::class, 'update'])->name('book.update');
         Route::delete('', [\App\Http\Controllers\Dashboard\Ajax\BookController::class, 'destroy'])->name('book.destroy');
 
         /* Detach author ID of book */
-        Route::delete('author/{authorId}', [AuthorBookDetachController::class, 'destroy'])
+        Route::get('author/{authorId}', [AuthorBookDetachController::class, 'destroy'])
                ->middleware('check_book_author')
                ->name('book.author.detach');
     });
