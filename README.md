@@ -28,14 +28,14 @@
 ## Command
     cp .env.example .env
 
-NEXT STEP
-- These packages are required for the make and composer commands
+##NEXT STEP
+These packages are required for the make and composer commands
 
     sudo apt-get install php8.0-gd
     sudo apt-get install php8.0-curl
 
-NEXT STEPS
-- Install make Unix and make commands for Docker
+##NEXT STEPS
+Install make Unix and make commands for Docker
 
     sudo apt update
     sudo apt install make
@@ -50,18 +50,18 @@ NEXT STEPS
 - echo %PATH%
 - make -v
 
-And next
+##And next
 
     make build
     make start
 
-NEXT STEPS
-- required project structure for correct composer install command
+##NEXT STEPS
+required project structure for correct composer install command
 
     mkdir -p storage/framework/{sessions,views,cache/data}
 
-NEXT STEPS
-- composer installation
+##NEXT STEPS
+composer installation
 
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     HASH="$(wget -q -O - https://composer.github.io/installer.sig)"
@@ -70,8 +70,8 @@ NEXT STEPS
     
     composer --version
 
-NEXT STEPS
-- all the needed clear commands
+##NEXT STEPS
+all the needed clear commands
 
     php artisan cache:clear
 
@@ -81,17 +81,17 @@ NEXT STEPS
     
     php artisan optimize:clear
 
-NEXT STEP
-- permissions and project generation commands
+##NEXT STEP
+permissions and project generation commands
 
     sudo chmod -R 777 ./
 
     make artisan-command CMD=key:generate
-    
+
     make artisan-command CMD=storage:link
-    
+
     make artisan-command CMD=migrate
-    
+
     make artisan-command CMD=db:seed
 
 ## Generation APP_KEY hash command
